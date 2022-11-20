@@ -24,10 +24,13 @@ class DatabaseController
         $this->action = $request->method;
         $request_body = file_get_contents('php://input');
         $this->body = $request_body ? json_decode($request_body, true) : null;
+
+        
     }
     /**
      * Retourne le résultat de la méthode ($action) exécutée
      */
+
     public function execute(): ?array
     {
         $action = strtolower($this->action);

@@ -1,0 +1,16 @@
+{
+    "name": "patrick/tabblz-api",
+    "autoload": {
+        "psr-4": {
+            "Patrick\\TabblzApi\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Patrick"
+        }
+    ],
+    "require": {
+        "phpmailer/phpmailer": "^6.6"
+    }
+}
