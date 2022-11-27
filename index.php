@@ -1,5 +1,6 @@
 <?php
 
+use Controllers\AuthController;
 use Controllers\DatabaseController;
 use Helpers\HttpRequest;
 use Helpers\HttpResponse;
@@ -8,6 +9,7 @@ use Tools\Initializer;
 use Helpers\Token;
 use PHPMailer\PHPMailer;
 use Services\MailerService;
+
 
 $_ENV["current"] = "dev";
 $config = file_get_contents("src/configs/" . $_ENV["current"] . ".config.json", true);
@@ -27,31 +29,39 @@ Autoload::register();
 require_once 'vendor/autoload.php';
 
 
-// $request = HttpRequest::instance();
-// $tables = DatabaseService::getTables();
+$request = HttpRequest::instance();
+$tables = DatabaseService::getTables();
 
-// if (
-//     $_ENV['current'] == 'dev' && !empty($request->route) && $request->route[0] ==
-//     'init'
-// ) {
-//     if (Initializer::start($request, $tables)) {
-//         HttpResponse::send(["message" => "Api Initialized"]);
-//     }
-//     HttpResponse::send(["message" => "Api Not Initialized, try again ..."]);
-// }
+if (
+    $_ENV['current'] == 'dev' && !empty($request->route) && $request->route[0] ==
+    'init'
+) {
+    if (Initializer::start($request, $tables)) {
+        HttpResponse::send(["message" => "Api Initialized"]);
+    }
+    HttpResponse::send(["message" => "Api Not Initialized, try again ..."]);
+}
+
+if (
+    $_ENV['current'] == 'dev' && !empty($request->route) && $request->route[0] ==
+    'auth'
+){
+    $authController = new AuthController($request);
+    $bp =true;
+
+}
+
+if (empty($request->route) || !in_array($request->route[0], $tables)) {
+    HttpResponse::exit();
+}
+$controller = new DatabaseController($request);
+$result = $controller->execute();
+HttpResponse::send(["data" => $result]);
 
 
-// if (empty($request->route) || !in_array($request->route[0], $tables)) {
-//     HttpResponse::exit();
-// }
-// $controller = new DatabaseController($request);
-// $result = $controller->execute();
-// HttpResponse::send(["data" => $result]);
-
-
-// $tokenFromEncodedString = Token::create($encoded);
-// $decoded = $tokenFromEncodedString->decoded;
-// $test = $tokenFromEncodedString->isValid();
+$tokenFromEncodedString = Token::create($encoded);
+$decoded = $tokenFromEncodedString->decoded;
+$test = $tokenFromEncodedString->isValid();
 
 
 $ms = new MailerService();
