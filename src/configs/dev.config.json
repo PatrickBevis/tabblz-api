@@ -8,7 +8,7 @@
         "pass": ""
     },
 
-    "secret_key": "gea142fer!ttey",
+    "secret_key": "gea142fer7ttey",
 
     "hash": {
         "prefix":"$argon2id$v=19$m=1024,t=2,p=2$"

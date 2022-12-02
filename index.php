@@ -16,13 +16,20 @@ $config = file_get_contents("src/configs/" . $_ENV["current"] . ".config.json", 
 $_ENV['config'] = json_decode($config);
 
 if ($_ENV["current"] == "dev") {
-    $origin = "http://localhost:3000";
+    $origin = "http://localhost:3001";
 } else if ($_ENV["current"] == "prod") {
     $origin = "http://nomdedomaine.com";
 }
 
-header("Access-Control-Allow-Origin: $origin");
 
+
+header("Access-Control-Allow-Origin: $origin");
+header("Access-Control-Allow-Methods: GET, POST, PUT, PATCH, OPTIONS");
+
+if ($_SERVER['REQUEST_METHOD'] == "OPTIONS") {
+    header('HTTP/1.0 200 OK');
+    die;
+}
 require_once 'autoload.php';
 Autoload::register();
 
@@ -45,19 +52,21 @@ if (
 if (
     $_ENV['current'] == 'dev' && !empty($request->route) && $request->route[0] ==
     'auth'
-){
+) {
     $authController = new AuthController($request);
-    $bp =true;
-
+    $result = $authController->execute();
+    HttpResponse::send(["data" => $result]);
+    $bp = true;
 }
 
 if (empty($request->route) || !in_array($request->route[0], $tables)) {
     HttpResponse::exit();
 }
+if($_ENV['current'] == 'dev' && !empty($request->route) && $request->route[0] !== 'auth'){
 $controller = new DatabaseController($request);
 $result = $controller->execute();
-HttpResponse::send(["data" => $result]);
-
+HttpResponse::send(["data" => $result],200);
+}
 
 $tokenFromEncodedString = Token::create($encoded);
 $decoded = $tokenFromEncodedString->decoded;

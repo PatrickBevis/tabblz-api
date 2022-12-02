@@ -36,15 +36,16 @@ class AuthController {
         $user = $dbs->selectWhere("login = ? AND is_deleted = ?", [$email, 0]);
         $prefix = $_ENV['config']->hash->prefix;
 
-        if (count($user) == 1 && password_verify($this->body['password'], $prefix . $user[0]->password)) {
+        if (count($user) == 1 && password_verify($this->body['password'], $prefix . $user[0]['password'])) {
 
             $dbs = new DatabaseService("role");
-            $role = $dbs->selectWhere("Id_role = ? AND is_deleted = ?", [$user[0]->Id_role, 0]);
+            
+            $role = $dbs->selectWhere("Id_role = ? AND is_deleted = ?", [$user[0]['Id_role'], 0]);
 
-            $tokenFromDataArray = Token::create(['login' => $user[0]->mail, 'password' => $user[0]->password]);
+            $tokenFromDataArray = Token::create(['login' => $user[0]['login'], 'password' => $user[0]['password']]);
             $encoded = $tokenFromDataArray->encoded;
 
-            return ["result" => true, "role" => $role[0]->weight, "id" => $user[0]->Id_app_user, "token" => $encoded];
+            return ["result" => true, "role" => $role[0]['weight'], "id" => $user[0]['Id_appuser'], "token" => $encoded];
         }
 
         return ["result" => false];

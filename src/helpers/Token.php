@@ -81,7 +81,7 @@ class Token {
             $decoded['validity'] = $decoded['expireAt'] - $decoded['usableAt'];
         }
         $this->decoded = $decoded;
-        $payload = json_encode($decoded) . self::$separator . $_ENV['secret_key'];
+        $payload = json_encode($decoded) . self::$separator . $_ENV['config']->secret_key;
         $payload = base64_encode($payload);
         $signature = password_hash($payload, PASSWORD_BCRYPT, ['cost' => 8]);
         $encoded = str_replace(self::$prefix, "", $signature) . self::$separator . $payload;

@@ -122,25 +122,61 @@ $e->getMessage()");
 * renvoie les lignes deleted sous forme de tableau
 * si la mise à jour s'est bien passé (sinon null)
 */
-// public function softDelete (array $body) : ? array
-//     {
-//     $sql = "UPDATE $this->table SET is_deleted = 1 WHERE $this->pk "
-//     //   $resp = $this->query ( $sql , $valuesToBind );
-//       if ( $resp -> result ) {
-//       $rows = // ???
-//       return $rows ;   
-//       }
-//       return null ;
-//     }
+public function softDelete(array $body): ?array {
+    $modelList = new ModelList($this->table, $body['items']);
+    
+    $idList = $modelList->idList();
+    $where = "";
+    
+    foreach($idList as $id){
+      $where .= '?, ';
+    }
+    
+    $where = substr($where, 0, -2);
+    
+    $sql = "UPDATE $this->table SET is_deleted=? WHERE $this->pk IN ($where);";
+    
+    $this->query($sql, [1, ...$idList]);
+    
+    $sql = "SELECT * FROM $this->table WHERE $this->pk IN ($where);";
+    
+    $resp = $this->query($sql, $idList);
+    if($resp->result){
+      $rows = $resp->statment->fetchAll(PDO::FETCH_ASSOC);
+      return $rows;
+    }
+    
+    return null;
+  } 
 
 /**
 * permet la suppression (effective) d'une ou plusieurs lignes
 * renvoie un tableau vide si la suppression est effective, sinon null
 */
-// public function hardDelete () : ?array
-// {
-// // ???
-// $resp = $this -> query ( $sql , $valuesToBind );
-// }
+public function hardDelete(array $body): ?array {
+    $modelList = new ModelList($this->table, $body['items']);
     
+    $idList = $modelList->idList();
+    $where = "";
+    
+    foreach($idList as $id){
+      $where .= '?, ';
+    }
+    
+    $where = substr($where, 0, -2);
+    
+    $sql = "DELETE FROM $this->table WHERE $this->pk IN ($where);";
+    
+    $this->query($sql, $idList);
+    
+    $sql = "SELECT * FROM $this->table WHERE $this->pk IN ($where);";
+    
+    $resp = $this->query($sql, $idList);
+    if($resp->result){
+      $rows = $resp->statment->fetchAll(PDO::FETCH_ASSOC);
+      return $rows;
+    }
+    
+    return null;
+  }
 }

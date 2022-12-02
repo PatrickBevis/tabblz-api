@@ -55,17 +55,17 @@ class DatabaseController
         return $rows;
     }
 
-    // private function patch()
-    // {
-    //     $dbs = new DatabaseService($this->table);
-    //     $rows = $dbs->softDelete($this->body);
-    //     return $rows;
-    // }
+    private function patch(): ?array
+    {
+        $dbs = new DatabaseService($this->table);
+        $rows = $dbs->softDelete($this->body);
+        return $rows;
+    }
 
-    // private function delete()
-    // {
-    //     $dbs = new DatabaseService($this->table);
-    //     $rows = $dbs->hardDelete();
-    //     return $rows;
-    // }
+    private function delete(): ?array
+    {
+        $dbs = new DatabaseService($this->table);
+        $rows = $dbs->hardDelete($this->body);
+        return $rows;
+    }
 }

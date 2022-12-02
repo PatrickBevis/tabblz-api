@@ -3,7 +3,7 @@
 class Appuser{
 
 	const COLUMNS = [
-		'Id_appUser' => ['type' => 'varchar(255)', 'nullable' => '0' , 'default' => ''],
+		'Id_appuser' => ['type' => 'varchar(255)', 'nullable' => '0' , 'default' => ''],
 		'login' => ['type' => 'varchar(255)', 'nullable' => '1' , 'default' => ''],
 		'password' => ['type' => 'varchar(255)', 'nullable' => '1' , 'default' => ''],
 		'is_deleted' => ['type' => 'tinyint(1)', 'nullable' => '1' , 'default' => ''],
