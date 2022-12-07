@@ -5,7 +5,7 @@ use Exception;
 class Token {
 
     private static $prefix = "$2y$08$"; //bcryp (salt = 8)
-    private static $defaultValidity = 60 * 60 * 1; //1h
+    private static $defaultValidity = 60 * 60 * 24; //1j
     private static $separator = "|";
 
     private function __construct()
@@ -108,7 +108,7 @@ class Token {
                 if(count($payloadSplit) == 2){
                     $payload = $payloadSplit[0];
                     $secret = $payloadSplit[1];
-                    if($secret == $_ENV['secret_key']){
+                    if($secret == $_ENV['config']->secret_key){
                         $decoded = json_decode($payload, true);
                     }
                 }
@@ -116,6 +116,7 @@ class Token {
             }
         }
         $this->decoded = $decoded ?? null;
+        $bp =true;
     }
 
 

@@ -16,14 +16,14 @@ $config = file_get_contents("src/configs/" . $_ENV["current"] . ".config.json", 
 $_ENV['config'] = json_decode($config);
 
 if ($_ENV["current"] == "dev") {
-    $origin = "http://localhost:3001";
+    $origin = "http://localhost:3000";
 } else if ($_ENV["current"] == "prod") {
     $origin = "http://nomdedomaine.com";
 }
 
-
-
 header("Access-Control-Allow-Origin: $origin");
+header('Access-Control-Allow-Headers: Authorization');
+header("Access-Control-Allow-Credentials: true");
 header("Access-Control-Allow-Methods: GET, POST, PUT, PATCH, OPTIONS");
 
 if ($_SERVER['REQUEST_METHOD'] == "OPTIONS") {

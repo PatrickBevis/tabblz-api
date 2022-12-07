@@ -1,11 +1,14 @@
-<?php namespace Controllers;
+<?php
 
+namespace Controllers;
 
+use Exception;
 use Services\DatabaseService;
 use Helpers\HttpRequest;
 use Helpers\Token;
 
-class AuthController {
+class AuthController
+{
     public function __construct(HttpRequest $request)
     {
         $this->controller = $request->route[0];
@@ -39,7 +42,7 @@ class AuthController {
         if (count($user) == 1 && password_verify($this->body['password'], $prefix . $user[0]['password'])) {
 
             $dbs = new DatabaseService("role");
-            
+
             $role = $dbs->selectWhere("Id_role = ? AND is_deleted = ?", [$user[0]['Id_role'], 0]);
 
             $tokenFromDataArray = Token::create(['login' => $user[0]['login'], 'password' => $user[0]['password']]);
@@ -50,5 +53,27 @@ class AuthController {
 
         return ["result" => false];
     }
+
+    public function check()
+    {
+        $headers = apache_request_headers();
+        if (isset($headers["Authorization"])) {
+            $token = $headers["Authorization"];
+        }
+        $secretKey = $_ENV['config']->secret_key;
+        if (isset($token) && !empty($token)) {
+
+
+            $tokenFromStringToken = Token::create($token);
+            $dataTab = $tokenFromStringToken->decoded;
+
+            $dbs = new DatabaseService('appuser');
+            $user = $dbs->selectWhere("login = ? AND is_deleted = ?", [$dataTab['login'], 0]);
+            $bp = true;
+            $dbs = new DatabaseService("role");
+            $role = $dbs->selectWhere("Id_role = ? AND is_deleted = ?", [$user[0]['Id_role'], 0]);
+            return ["result" => true, "role" =>  $role[0]['weight'], "id" => $user[0]['Id_appuser']];
+        }
+        return ["result" => false];
+    }
 }
-?>
