@@ -9,6 +9,7 @@ use Tools\Initializer;
 use Helpers\Token;
 use PHPMailer\PHPMailer;
 use Services\MailerService;
+use Middlewares\AuthMiddleware;
 
 
 $_ENV["current"] = "dev";
@@ -58,6 +59,10 @@ if (
     HttpResponse::send(["data" => $result]);
     $bp = true;
 }
+
+// $am = new AuthMiddleware($request);
+// $am->verify();
+// $bp = true;
 
 if (empty($request->route) || !in_array($request->route[0], $tables)) {
     HttpResponse::exit();

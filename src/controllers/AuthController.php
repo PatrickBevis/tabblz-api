@@ -2,7 +2,7 @@
 
 namespace Controllers;
 
-use Exception;
+
 use Services\DatabaseService;
 use Helpers\HttpRequest;
 use Helpers\Token;
@@ -60,7 +60,7 @@ class AuthController
         if (isset($headers["Authorization"])) {
             $token = $headers["Authorization"];
         }
-        $secretKey = $_ENV['config']->secret_key;
+        
         if (isset($token) && !empty($token)) {
 
 

@@ -24,5 +24,11 @@
             "user": "bevis.patrick@gmail.com",
             "pass": "kwvaszkcysphqslk"
         }
+    },
+
+    "restricted" : {
+        "GET/appuser": "$userRole == 4",
+        "GET/appuser/:id": "$userRole == 4 || $userId == $id;",
+        "GET/meal" : "$userRole > 0;"
     }
 }

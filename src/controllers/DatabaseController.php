@@ -23,8 +23,8 @@ class DatabaseController
         $this->pk = 'Id_' . ($this->table);
         $this->action = $request->method;
         $request_body = file_get_contents('php://input');
-        $this->body = $request_body ? json_decode($request_body, true) : null;
-
+        $this->body = $request_body ? json_decode($request_body, true) : [];
+$bp = true;
         
     }
     /**

@@ -4,6 +4,7 @@ namespace Helpers;
 
 class HttpRequest
 {
+    public string $routeSlashed;
     public string $method;
     public array $route;
     /**
@@ -13,12 +14,16 @@ class HttpRequest
      */
     private function __construct()
     {
-        $this->method = $_SERVER["REQUEST_METHOD"];
         
-        $request = filter_var(trim($_SERVER["REQUEST_URI"], '/'), FILTER_SANITIZE_URL);
-            
-        $request = trim($request,'/');
-        $request = explode('/',$request);
+        
+        // $request = filter_var(trim($_SERVER["REQUEST_URI"], '/'), FILTER_SANITIZE_URL);
+        $this->routeSlashed = $_SERVER['REQUEST_METHOD'] . "/" . filter_var(trim($_SERVER["REQUEST_URI"], '/'), FILTER_SANITIZE_URL);
+        
+        // $request = trim($request,'/');
+
+        $request = explode('/', $this->routeSlashed);
+        $this->method = array_shift($request);
+        
         if ($_ENV['current'] == "dev" && $_SERVER['SERVER_NAME'] == 'localhost') {
             array_shift($request);
         }
