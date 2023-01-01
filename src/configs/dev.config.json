@@ -4,8 +4,8 @@
         "host": "localhost",
         "port": "3306",
         "dbName": "tabblz",
-        "user": "root",
-        "pass": ""
+        "user": "Patrick",
+        "pass": "447fddf668"
     },
 
     "secret_key": "gea142fer7ttey",

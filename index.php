@@ -60,9 +60,9 @@ if (
     $bp = true;
 }
 
-// $am = new AuthMiddleware($request);
-// $am->verify();
-// $bp = true;
+$am = new AuthMiddleware($request);
+$am->verify();
+$bp = true;
 
 if (empty($request->route) || !in_array($request->route[0], $tables)) {
     HttpResponse::exit();
